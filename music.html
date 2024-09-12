@@ -4,55 +4,130 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Music Player</title>
+    <title>Music Player Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             background: #f0f0f0;
-            text-align: center;
+            margin: 0;
+            padding: 20px;
         }
-        .player-container {
+        .section {
             background: #ffffff;
             padding: 20px;
+            margin-bottom: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .section h2 {
+            margin: 0;
+            margin-bottom: 10px;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            margin-top: 20px;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .time-display {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="player-container">
-        <h1>Welcome to My Music Website</h1>
-        <button onclick="toggleMusic()">Play/Pause Music</button>
-    </div>
-    
-    <!-- Background Music -->
-    <audio id="background-music" loop>
-        <source src="1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    
-    <script>
-        const music = document.getElementById('background-music');
-        music.volume = 0.5; // Set volume (0.0 to 1.0)
-        music.play(); // Automatically play music when the page loads
 
-        function toggleMusic() {
-            if (music.paused) {
-                music.play();
+    <div class="section">
+        <h2>Song 1: first thing first time</h2>
+        <div class="controls">
+            <button onclick="toggleMusic('song1')">Play/Pause</button>
+            <input type="range" id="timeline1" value="0" step="1" onchange="changeTime('song1', this.value)">
+        </div>
+        <div class="time-display">Current Time: <span id="time1">0:00/0:00</span></div>
+        <audio id="song1" ontimeupdate="updateTimeline('song1', 'timeline1', 'time1')" onloadedmetadata="setDuration('song1', 'time1')">
+            <source src="1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <div class="section">
+        <h2>Song 2: Nature Sounds</h2>
+        <div class="controls">
+            <button onclick="toggleMusic('song2')">Play/Pause</button>
+            <input type="range" id="timeline2" value="0" step="1" onchange="changeTime('song2', this.value)">
+        </div>
+        <div class="time-display">Current Time: <span id="time2">0:00/0:00</span></div>
+        <audio id="song2" ontimeupdate="updateTimeline('song2', 'timeline2', 'time2')" onloadedmetadata="setDuration('song2', 'time2')">
+            <source src="your-music-file-2.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <div class="section">
+        <h2>Song 3: Instrumental Beats</h2>
+        <div class="controls">
+            <button onclick="toggleMusic('song3')">Play/Pause</button>
+            <input type="range" id="timeline3" value="0" step="1" onchange="changeTime('song3', this.value)">
+        </div>
+        <div class="time-display">Current Time: <span id="time3">0:00/0:00</span></div>
+        <audio id="song3" ontimeupdate="updateTimeline('song3', 'timeline3', 'time3')" onloadedmetadata="setDuration('song3', 'time3')">
+            <source src="your-music-file-3.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <script>
+        // Function to format time in "minutes:seconds"
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`; // Format as "minutes:seconds"
+        }
+
+        // Function to play or pause the music
+        function toggleMusic(songId) {
+            const song = document.getElementById(songId);
+            if (song.paused) {
+                song.play();
             } else {
-                music.pause();
+                song.pause();
             }
         }
+
+        // Function to update the timeline position and current time as the song plays
+        function updateTimeline(songId, timelineId, timeDisplayId) {
+            const song = document.getElementById(songId);
+            const timeline = document.getElementById(timelineId);
+            const timeDisplay = document.getElementById(timeDisplayId);
+            
+            timeline.max = song.duration;
+            timeline.value = song.currentTime;
+            timeDisplay.textContent = `${formatTime(song.currentTime)}/${formatTime(song.duration)}`; // Display current/total time in "minutes:seconds"
+        }
+
+        // Function to set the total duration when metadata is loaded
+        function setDuration(songId, timeDisplayId) {
+            const song = document.getElementById(songId);
+            const timeDisplay = document.getElementById(timeDisplayId);
+            timeDisplay.textContent = `0:00/${formatTime(song.duration)}`; // Set total duration initially
+        }
+
+        // Function to change the song's current time based on the timeline input
+        function changeTime(songId, value) {
+            const song = document.getElementById(songId);
+            song.currentTime = value;
+        }
     </script>
+
 </body>
 </html>
