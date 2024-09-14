@@ -48,13 +48,13 @@
 <body>
 
     <div class="section">
-        <h2>Song 1: first thing first time</h2>
+        <h2>Song 1: First Thing First Time</h2>
         <div class="controls">
             <button onclick="toggleMusic('song1')">Play/Pause</button>
             <input type="range" id="timeline1" value="0" step="1" onchange="changeTime('song1', this.value)">
         </div>
         <div class="time-display">Current Time: <span id="time1">0:00/0:00</span></div>
-        <audio id="song1" ontimeupdate="updateTimeline('song1', 'timeline1', 'time1')" onloadedmetadata="setDuration('song1', 'time1')">
+        <audio id="song1" autoplay loop ontimeupdate="updateTimeline('song1', 'timeline1', 'time1')" onloadedmetadata="setDuration('song1', 'time1')">
             <source src="1.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -67,7 +67,7 @@
             <input type="range" id="timeline2" value="0" step="1" onchange="changeTime('song2', this.value)">
         </div>
         <div class="time-display">Current Time: <span id="time2">0:00/0:00</span></div>
-        <audio id="song2" ontimeupdate="updateTimeline('song2', 'timeline2', 'time2')" onloadedmetadata="setDuration('song2', 'time2')">
+        <audio id="song2" autoplay loop ontimeupdate="updateTimeline('song2', 'timeline2', 'time2')" onloadedmetadata="setDuration('song2', 'time2')">
             <source src="your-music-file-2.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -80,7 +80,7 @@
             <input type="range" id="timeline3" value="0" step="1" onchange="changeTime('song3', this.value)">
         </div>
         <div class="time-display">Current Time: <span id="time3">0:00/0:00</span></div>
-        <audio id="song3" ontimeupdate="updateTimeline('song3', 'timeline3', 'time3')" onloadedmetadata="setDuration('song3', 'time3')">
+        <audio id="song3" autoplay loop ontimeupdate="updateTimeline('song3', 'timeline3', 'time3')" onloadedmetadata="setDuration('song3', 'time3')">
             <source src="your-music-file-3.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -127,6 +127,14 @@
             const song = document.getElementById(songId);
             song.currentTime = value;
         }
+
+        // Optional: Handle browser tab visibility to pause music if needed
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) {
+                const songs = document.querySelectorAll('audio');
+                songs.forEach(song => song.play());  // Ensures all songs resume when tab becomes visible
+            }
+        });
     </script>
 
 </body>
